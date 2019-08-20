@@ -1,0 +1,6 @@
+classes=80
+train=data/zsd/train.txt
+valid=None
+names=data/classes.names
+backup=backup/
+eval=coco
