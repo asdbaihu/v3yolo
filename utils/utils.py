@@ -832,3 +832,21 @@ def plot_results_overlay(start=1, stop=0):  # from utils.utils import *; plot_re
 def version_to_tuple(version):
     # Used to compare versions of library
     return tuple(map(int, (version.split("."))))
+
+
+def load_Embeddings(paths, classes):
+    '''
+    load Bert Embeddings feature from json file
+    output: torch.tensor
+    '''
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    Embedding_features = {}
+    for path in paths:
+        fp = open(path, "r")
+        Embedding_feature = json.load(fp)
+        Embedding_features.update(Embedding_feature)
+    out = []
+    for key in classes:
+        out.append(Embedding_features[key])
+    return torch.from_numpy(np.array(out)).float().to(device)
