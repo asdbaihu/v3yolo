@@ -187,7 +187,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         self.rect = False if image_weights else rect
 
         # Define labels
-        print(self.img_files[0].replace('images', 'labels').replace(os.path.splitext(self.img_files[0])[-1]))
+        print(self.img_files[0].replace('images', 'labels').replace(os.path.splitext(self.img_files[0])[-1], '.txt'))
         self.label_files = [x.replace('images', 'labels').replace(os.path.splitext(x)[-1], '.txt')
                             for x in self.img_files]
 
