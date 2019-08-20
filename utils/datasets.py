@@ -244,6 +244,8 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                 if l.shape[0]:
                     assert l.shape[1] == 5, '> 5 label columns: %s' % file
                     assert (l >= 0).all(), 'negative labels: %s' % file
+                    if not (l[:, 1:] <= 1).all():
+                        print(file, l)
                     assert (l[:, 1:] <= 1).all(), 'non-normalized or out of bounds coordinate labels: %s' % file
                     self.labels[i] = l
                     nf += 1  # file found
