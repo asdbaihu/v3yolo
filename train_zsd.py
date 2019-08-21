@@ -268,7 +268,7 @@ def train(cfg,
             #         x['weight_decay'] = hyp['weight_decay'] * g
 
             # Run model
-            pred = model(imgs, emb=emb_ft)
+            pred = model(imgs, emb_ft)
 
             # Compute loss
             loss, loss_items = compute_loss(pred, targets, model)
