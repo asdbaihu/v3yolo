@@ -149,7 +149,7 @@ class YOLOLayer(nn.Module):
         self.ny = 0  # initialize number of y gridpoints
         self.num_ft = 128
         self.AN = AttributeNetwork()
-        self.RN = RelationNetwork(self.num_ft = 128*2)
+        self.RN = RelationNetwork(self.num_ft*2)
 
         if ONNX_EXPORT:  # grids must be computed in __init__
             stride = [32, 16, 8][yolo_index]  # stride of this layer
