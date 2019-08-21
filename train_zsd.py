@@ -298,14 +298,15 @@ def train(cfg,
         # Calculate mAP (always test final epoch, skip first 5 if opt.nosave)
         final_epoch = epoch + 1 == epochs
         if not (opt.notest or (opt.nosave and epoch < 10)) or final_epoch:
-            with torch.no_grad():
-                results, maps = test.test(cfg,
-                                          data,
-                                          batch_size=batch_size,
-                                          img_size=opt.img_size,
-                                          model=model,
-                                          conf_thres=0.001 if final_epoch and epoch > 0 else 0.1,  # 0.1 for speed
-                                          save_json=final_epoch and 'coco.data' in data)
+            print('no implement for eval, pass')
+            # with torch.no_grad():
+            #     results, maps = test.test(cfg,
+            #                               data,
+            #                               batch_size=batch_size,
+            #                               img_size=opt.img_size,
+            #                               model=model,
+            #                               conf_thres=0.001 if final_epoch and epoch > 0 else 0.1,  # 0.1 for speed
+            #                               save_json=final_epoch and 'coco.data' in data)
 
         # Write epoch results
         with open('results.txt', 'a') as file:
@@ -364,7 +365,7 @@ if __name__ == '__main__':
     parser.add_argument('--epochs', type=int, default=10, help='number of epochs')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--accumulate', type=int, default=2, help='number of batches to accumulate before optimizing')
-    parser.add_argument('--cfg', type=str, default='cfg/yolov3-spp-zsd.cfg', help='cfg file path')
+    parser.add_argument('--cfg', type=str, default='cfg/yolov3-tiny-zsd.cfg', help='cfg file path')
     parser.add_argument('--data', type=str, default='data/my.data', help='coco.data file path')
     parser.add_argument('--multi-scale', action='store_true', help='train at (1/1.5)x - 1.5x sizes')
     parser.add_argument('--img-size', type=int, default=416, help='inference size (pixels)')
