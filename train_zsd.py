@@ -101,7 +101,7 @@ def train(cfg,
     nc = int(data_dict['classes'])  # number of classes
     class_names = load_classes(data_dict["names"])
     embed_path = data_dict["embedding"]
-    emb_ft = load_Embeddings([embed_path], class_names).to(device) # size(num_cls, 768)
+    emb_ft = load_Embeddings([embed_path], class_names) # size(num_cls, 768)
 
     # Initialize model
     model = Darknet(cfg).to(device)

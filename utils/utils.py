@@ -840,7 +840,7 @@ def load_Embeddings(paths, classes):
     output: torch.tensor
     '''
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    import json
     Embedding_features = {}
     for path in paths:
         fp = open(path, "r")
