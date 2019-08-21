@@ -172,11 +172,11 @@ class YOLOLayer(nn.Module):
         
         ### relation network ###
         s_emb = self.AN(emb_ft)
-        s_emb = s_emb.view(1, self.num_classes, self.num_ft, 1, 1).permute(0,2,1,3,4).contiguous()
-        s_emb = s_emb.repeat(num_samples,1, self.num_anchors,grid_size,grid_size)
-        v_emb = p[...,5:].permute(0,4,1,2,3).contiguous().repeat(1,1,self.num_classes,1,1)
+        s_emb = s_emb.view(1, self.nc, self.num_ft, 1, 1).permute(0,2,1,3,4).contiguous()
+        s_emb = s_emb.repeat(bs,1, self.na,self.ny, self.nx)
+        v_emb = p[...,5:].permute(0,4,1,2,3).contiguous().repeat(1,1,self.nc,1,1)
         relation = self.RN(v_emb, s_emb)
-        relation = (relation.view(num_samples,self.num_anchors,self.num_classes,grid_size,grid_size)
+        relation = (relation.view(bs,self.na,self.nc,self.ny, self.nx)
                     .permute(0,1,3,4,2).contiguous())
 
         if self.training:
