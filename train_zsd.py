@@ -6,7 +6,7 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 
 import test  # import test.py to get mAP after each epoch
-from zsd_models import *
+from zsd_model import *
 from utils.datasets import *
 from utils.utils import *
 
