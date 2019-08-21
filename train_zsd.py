@@ -99,8 +99,8 @@ def train(cfg,
     data_dict = parse_data_cfg(data)
     train_path = data_dict['train']
     nc = int(data_dict['classes'])  # number of classes
-    class_names = load_classes(data_config["names"])
-    embed_path = data_config["embedding"]
+    class_names = load_classes(data_dict["names"])
+    embed_path = data_dict["embedding"]
     emb_ft = load_Embeddings([embed_path], class_names).to(device) # size(num_cls, 768)
 
     # Initialize model
