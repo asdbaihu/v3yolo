@@ -4,4 +4,4 @@ valid=None
 names=data/classes.names
 backup=backup/
 eval=coco
-embedding=data/custom/seen_embeddings_Bert.json
+embedding=data/zsd/seen_embeddings_Bert.json
