@@ -179,7 +179,7 @@ def train(cfg,
     if torch.cuda.device_count() > 1:
         dist.init_process_group(backend='nccl',  # 'distributed backend'
                                 init_method='tcp://127.0.0.1:9999',  # distributed training init method
-                                world_size=4,  # number of nodes for distributed training
+                                world_size=8,  # number of nodes for distributed training
                                 rank=0)  # distributed training node rank
         model = torch.nn.parallel.DistributedDataParallel(model)
         model.yolo_layers = model.module.yolo_layers  # move yolo layer indices to top level
