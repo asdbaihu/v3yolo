@@ -179,8 +179,9 @@ class YOLOLayer(nn.Module):
         relation = (relation.view(bs,self.na,self.nc,self.ny, self.nx)
                     .permute(0,1,3,4,2).contiguous())
 
+        p = torch.cat((p[...,:5],relation),-1)
         if self.training:
-            return torch.cat((p[...,:5],relation),-1)
+            return p
 
         elif ONNX_EXPORT:
             # Constants CAN NOT BE BROADCAST, ensure correct shape!
