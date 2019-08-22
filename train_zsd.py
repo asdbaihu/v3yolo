@@ -236,6 +236,7 @@ def train(cfg,
         mloss = torch.zeros(5).to(device)  # mean losses
         pbar = tqdm(enumerate(dataloader), total=nb)  # progress bar
         for i, (imgs, targets, paths, _) in pbar:
+            continue
             imgs = imgs.to(device)
             targets = targets.to(device)
 
