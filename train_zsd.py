@@ -197,7 +197,7 @@ def train(cfg,
     # Dataloader
     dataloader = torch.utils.data.DataLoader(dataset,
                                              batch_size=batch_size,
-                                             num_workers=8,#min(os.cpu_count(), batch_size),
+                                             num_workers=1,#min(os.cpu_count(), batch_size),
                                              shuffle=not opt.rect,  # Shuffle=True unless rectangular training is used
                                              pin_memory=True,
                                              collate_fn=dataset.collate_fn)
