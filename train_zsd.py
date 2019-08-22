@@ -235,8 +235,10 @@ def train(cfg,
 
         mloss = torch.zeros(5).to(device)  # mean losses
         pbar = tqdm(enumerate(dataloader), total=nb)  # progress bar
+        count = 0
         for i, (imgs, targets, paths, _) in pbar:
-            continue
+            count+=1
+            if count>10: break
             imgs = imgs.to(device)
             targets = targets.to(device)
 
@@ -310,8 +312,9 @@ def train(cfg,
             #                               save_json=final_epoch and 'coco.data' in data)
 
         # Write epoch results
-        with open('results.txt', 'a') as file:
-            file.write(s + '%11.3g' * 7 % results + '\n')  # P, R, mAP, F1, test_losses=(GIoU, obj, cls)
+        print('no write results')
+        # with open('results.txt', 'a') as file:
+        #     file.write(s + '%11.3g' * 7 % results + '\n')  # P, R, mAP, F1, test_losses=(GIoU, obj, cls)
 
         # Write Tensorboard results
         if tb_writer:
