@@ -104,6 +104,7 @@ def train(cfg,
     emb_ft = load_Embeddings([embed_path], class_names) # size(num_cls, 768)
 
     # Initialize model
+    print('Initialize model')
     model = Darknet(cfg).to(device)
 
     # Optimizer
@@ -176,6 +177,7 @@ def train(cfg,
         model, optimizer = amp.initialize(model, optimizer, opt_level='O1', verbosity=0)
 
     # Initialize distributed training
+    print('Initialize distributed training')
     if torch.cuda.device_count() > 1:
         dist.init_process_group(backend='nccl',  # 'distributed backend'
                                 init_method='tcp://127.0.0.1:9999',  # distributed training init method
@@ -185,6 +187,7 @@ def train(cfg,
         model.yolo_layers = model.module.yolo_layers  # move yolo layer indices to top level
 
     # Dataset
+    print('dataset')
     dataset = LoadImagesAndLabels(train_path,
                                   img_size,
                                   batch_size,
@@ -195,6 +198,7 @@ def train(cfg,
                                   cache_images=opt.cache_images)
 
     # Dataloader
+    print('initialize dataloader')
     dataloader = torch.utils.data.DataLoader(dataset,
                                              batch_size=batch_size,
                                              num_workers=8,#min(os.cpu_count(), batch_size),
@@ -203,6 +207,7 @@ def train(cfg,
                                              collate_fn=dataset.collate_fn)
 
     # Start training
+    print('start training')
     model.nc = nc  # attach number of classes to model
     model.hyp = hyp  # attach hyperparameters to model
     model.class_weights = labels_to_class_weights(dataset.labels, nc).to(device)  # attach class weights
