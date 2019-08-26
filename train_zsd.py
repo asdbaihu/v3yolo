@@ -144,6 +144,7 @@ def train(cfg,
         del chkpt
 
     else:  # Initialize model with backbone (optional)
+        print('load pretrained weights')
         if '-tiny.cfg' in cfg:
             cutoff = load_darknet_weights(model, weights + 'yolov3-tiny.conv.15')
         else:
