@@ -6,7 +6,7 @@ import torch.optim as optim
 import torch.optim.lr_scheduler as lr_scheduler
 
 import test  # import test.py to get mAP after each epoch
-from zsd_model import *
+from zsd_model2 import *
 from utils.datasets import *
 from utils.utils import *
 
@@ -154,6 +154,9 @@ def train(cfg,
         # Remove old results
         for f in glob.glob('*_batch*.jpg') + glob.glob('results.txt'):
             os.remove(f)
+
+    # freeze weights
+    freeze(model)
 
     # Scheduler https://github.com/ultralytics/yolov3/issues/238
     # lf = lambda x: 1 - x / epochs  # linear ramp to zero
