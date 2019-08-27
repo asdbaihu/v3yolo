@@ -126,7 +126,7 @@ class RelationNetwork(nn.Module):
 
 class ConfNetwork(nn.Module):
     def __init__(self, input_size=256, hidden_size=128):
-        super(RelationNetwork, self).__init__()
+        super(ConfNetwork, self).__init__()
         self.cn = nn.Sequential(
             nn.Linear(input_size, hidden_size),
             nn.ReLU(),
