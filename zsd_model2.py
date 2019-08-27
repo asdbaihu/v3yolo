@@ -133,9 +133,9 @@ class ConfNetwork(nn.Module):
             nn.Linear(hidden_size, 5),
         )
 
-    def forward(self, visual_emb, relation_emb):
+    def forward(self, x) #visual_emb, relation_emb):
         # (bs,13,13,3,128+256) -> 
-        x = torch.cat((visual_emb, relation_emb), -1)
+        # x = torch.cat((visual_emb, relation_emb), -1)
 
         return self.cn(x)
 
