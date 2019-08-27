@@ -154,6 +154,7 @@ class AttributeNetwork(nn.Module):
         )
 
     def forward(self, word_embeddings):
+        word_embeddings = torch.squeeze(word_embeddings)
         semantic_emb = self.word_emb_transformer(word_embeddings)
         return semantic_emb
 
