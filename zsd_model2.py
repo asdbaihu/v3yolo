@@ -187,6 +187,7 @@ class YOLOLayer(nn.Module):
         '''
 
         self.nc = emb_ft.size()[0]
+        print(p.size(), self.nc)
 
         if ONNX_EXPORT:
             bs = 1  # batch size
