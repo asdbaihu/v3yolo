@@ -187,7 +187,7 @@ class YOLOLayer(nn.Module):
         '''
 
         self.nc = emb_ft.size()[0]
-        print(p.size(), self.nc)
+        print(p.size(), emb_ft.size())
 
         if ONNX_EXPORT:
             bs = 1  # batch size
@@ -211,7 +211,7 @@ class YOLOLayer(nn.Module):
         # relation:(bs,13,13,3*80,1)->(bs,13,13,3,80)
         relation = self.RN(v_emb_, s_emb)
         relation = relation.view(bs,self.ny, self.nx,self.na,self.nc)
-        confidence = self.CN(v_emb_)
+        confidence = self.CN(v_emb)
         
         # (bs,13,13,3,85) -> (bs,3,13,13,85)
         print(confidence.size(),relation.size())
