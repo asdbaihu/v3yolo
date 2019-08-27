@@ -187,7 +187,7 @@ class YOLOLayer(nn.Module):
         '''
 
         self.nc = emb_ft.size()[0]
-        print(p.size(), emb_ft.size())
+        assert self.nc in [80,40]
 
         if ONNX_EXPORT:
             bs = 1  # batch size
@@ -214,7 +214,7 @@ class YOLOLayer(nn.Module):
         confidence = self.CN(v_emb)
         
         # (bs,13,13,3,85) -> (bs,3,13,13,85)
-        print(confidence.size(),relation.size())
+        # print(confidence.size(),relation.size())
         p = torch.cat((confidence,relation),-1)
         p = p.permute(0,3,1,2,4).contiguous()
 
