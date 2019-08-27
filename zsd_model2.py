@@ -186,7 +186,7 @@ class YOLOLayer(nn.Module):
              s_emb -> AN      xyxy,conf
         '''
 
-        self.nc = emb_ft.size()[0]
+        self.nc = emb_ft.size()[-2]
         assert self.nc in [80,40]
 
         if ONNX_EXPORT:
