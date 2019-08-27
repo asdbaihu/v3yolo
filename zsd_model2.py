@@ -168,7 +168,7 @@ class YOLOLayer(nn.Module):
         self.nc = nc  # number of classes (80)
         self.nx = 0  # initialize number of x gridpoints
         self.ny = 0  # initialize number of y gridpoints
-        self.num_ft = 128
+        self.num_ft = 64
         self.fc = nn.Linear(256, (self.num_ft)*3)
         self.AN = AttributeNetwork(self.num_ft*2, self.num_ft)
         self.RN = RelationNetwork(self.num_ft*2, self.num_ft)
