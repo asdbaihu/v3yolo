@@ -102,6 +102,8 @@ def train(cfg,
     class_names = load_classes(data_dict["names"])
     embed_path = data_dict["embedding"]
     emb_ft = load_Embeddings([embed_path], class_names) # size(num_cls, 768)
+    print(emb_ft.shape)
+    return
 
     # Initialize model
     print('Initialize model')
