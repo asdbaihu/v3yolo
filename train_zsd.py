@@ -110,6 +110,18 @@ def train(cfg,
     print('Initialize model')
     model = Darknet(cfg).to(device)
 
+    # freeze weights
+    freeze(model)
+
+    # Optimizer
+    # optimizer = optim.Adam(model.parameters(), lr=hyp['lr0'], weight_decay=hyp['weight_decay'])
+    # optimizer = AdaBound(model.parameters(), lr=hyp['lr0'], final_lr=0.1)
+    # optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
+    #                       nesterov=True)
+    params = filter(lambda p: p.requires_grad, model.parameters())
+    optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
+                          nesterov=True)
+
     cutoff = -1  # backbone reaches to cutoff layer
     start_epoch = 0
     best_fitness = 0.
@@ -151,18 +163,6 @@ def train(cfg,
         # Remove old results
         for f in glob.glob('*_batch*.jpg') + glob.glob('results.txt'):
             os.remove(f)
-
-    # freeze weights
-    freeze(model)
-
-    # Optimizer
-    # optimizer = optim.Adam(model.parameters(), lr=hyp['lr0'], weight_decay=hyp['weight_decay'])
-    # optimizer = AdaBound(model.parameters(), lr=hyp['lr0'], final_lr=0.1)
-    # optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
-    #                       nesterov=True)
-    params = filter(lambda p: p.requires_grad, model.parameters())
-    optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
-                          nesterov=True)
 
     # Scheduler https://github.com/ultralytics/yolov3/issues/238
     # lf = lambda x: 1 - x / epochs  # linear ramp to zero
