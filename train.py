@@ -28,10 +28,10 @@ except:
 #      0.296      0.228       0.152       0.220        5.18        1.43        4.27       0.265        11.7        4.81        11.5        1.56       0.281      0.0013          -4       0.944    0.000427      0.0599       0.142        1.03      0.0552      0.0555       0.434 i
 
 # 320 --epochs 2
-# 0.242	0.296	0.196	0.231	5.67	0.8541	4.286	0.1539	21.61	1.957	22.9	2.894	0.3689	0.001844	-4	0.913	0.000467  # ha 0.417 mAP @ epoch 100
-# 0.298	0.244	0.167	0.247	4.99	0.8896	4.067	0.1694	21.41	2.033	25.61	1.783	0.4115	0.00128	    -4	0.950	0.000377  # hb
-# 0.268	0.268	0.178	0.240	4.36	1.104	5.596	0.2087	14.47	2.599	16.27	2.406	0.4114	0.001585	-4	0.950	0.000524  # hc
-# 0.161	0.327	0.190	0.193	7.82	1.153	4.062	0.1845	24.28	3.05	20.93	2.842	0.2759	0.001357	-4	0.916	0.000572  # hd 0.438 mAP @ epoch 100
+# 0.242 0.296   0.196   0.231   5.67    0.8541  4.286   0.1539  21.61   1.957   22.9    2.894   0.3689  0.001844    -4  0.913   0.000467  # ha 0.417 mAP @ epoch 100
+# 0.298 0.244   0.167   0.247   4.99    0.8896  4.067   0.1694  21.41   2.033   25.61   1.783   0.4115  0.00128     -4  0.950   0.000377  # hb
+# 0.268 0.268   0.178   0.240   4.36    1.104   5.596   0.2087  14.47   2.599   16.27   2.406   0.4114  0.001585    -4  0.950   0.000524  # hc
+# 0.161 0.327   0.190   0.193   7.82    1.153   4.062   0.1845  24.28   3.05    20.93   2.842   0.2759  0.001357    -4  0.916   0.000572  # hd 0.438 mAP @ epoch 100
 
 # Hyperparameters (j-series, 50.5 mAP yolov3-320) evolved by @ktian08 https://github.com/ultralytics/yolov3/issues/310
 hyp = {'giou': 1.582,  # giou loss gain
@@ -139,15 +139,15 @@ def train(cfg,
         start_epoch = chkpt['epoch'] + 1
         del chkpt
 
-    # else:  # Initialize model with backbone (optional)
-    #     if '-tiny.cfg' in cfg:
-    #         cutoff = load_darknet_weights(model, weights + 'yolov3-tiny.conv.15')
-    #     else:
-    #         cutoff = load_darknet_weights(model, weights + 'darknet53.conv.74')
+    else:  # Initialize model with backbone (optional)
+        if '-tiny.cfg' in cfg:
+            cutoff = load_darknet_weights(model, weights + 'yolov3-tiny.conv.15')
+        else:
+            cutoff = load_darknet_weights(model, weights + 'darknet53.conv.74')
 
-    #     # Remove old results
-    #     for f in glob.glob('*_batch*.jpg') + glob.glob('results.txt'):
-    #         os.remove(f)
+        # Remove old results
+        for f in glob.glob('*_batch*.jpg') + glob.glob('results.txt'):
+            os.remove(f)
 
     # Scheduler https://github.com/ultralytics/yolov3/issues/238
     # lf = lambda x: 1 - x / epochs  # linear ramp to zero
@@ -239,7 +239,7 @@ def train(cfg,
             # Multi-Scale training
             ni = (i + nb * epoch)  # number integrated batches (since train start)
             if multi_scale:
-                if ni / accumulate % 10 == 0:  #  adjust (67% - 150%) every 10 batches
+                if ni / accumulate % 10 == 0:  #  adjust (67% - 150%) every 10 batches
                     img_size = random.randrange(img_sz_min, img_sz_max + 1) * 32
                 sf = img_size / max(imgs.shape[2:])  # scale factor
                 if sf != 1:
@@ -358,7 +358,7 @@ def train(cfg,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epochs', type=int, default=10, help='number of epochs')
+    parser.add_argument('--epochs', type=int, default=273, help='number of epochs')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--accumulate', type=int, default=2, help='number of batches to accumulate before optimizing')
     parser.add_argument('--cfg', type=str, default='cfg/yolov3-spp.cfg', help='cfg file path')
