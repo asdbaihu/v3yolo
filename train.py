@@ -42,7 +42,7 @@ hyp = {'giou': 1.582,  # giou loss gain
        'obj': 21.35,  # obj loss gain
        'obj_pw': 3.941,  # obj BCELoss positive_weight
        'iou_t': 0.2635,  # iou training threshold
-       'lr0': 0.002324,  # initial learning rate
+       'lr0': 0.0005, #0.002324,  # initial learning rate
        'lrf': -4.,  # final LambdaLR learning rate = lr0 * (10 ** lrf)
        'momentum': 0.97,  # SGD momentum
        'weight_decay': 0.0004569,  # optimizer weight decay
@@ -99,13 +99,26 @@ def train(cfg,
     data_dict = parse_data_cfg(data)
     train_path = data_dict['train']
     nc = int(data_dict['classes'])  # number of classes
+    class_names = load_classes(data_dict["names"])
+    # embed_path = data_dict["embedding"]
+    # emb_ft = load_Embeddings([embed_path], class_names) # size(num_cls, 768)
+    # count = torch.cuda.device_count()
+    # if count > 1:
+    #     emb_ft = torch.unsqueeze(emb_ft, 0).repeat(count,1,1)
 
     # Initialize model
+    print('Initialize model')
     model = Darknet(cfg).to(device)
+
+    # freeze weights
+    # freeze(model)
 
     # Optimizer
     # optimizer = optim.Adam(model.parameters(), lr=hyp['lr0'], weight_decay=hyp['weight_decay'])
     # optimizer = AdaBound(model.parameters(), lr=hyp['lr0'], final_lr=0.1)
+    # optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
+    #                       nesterov=True)
+    params = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = optim.SGD(model.parameters(), lr=hyp['lr0'], momentum=hyp['momentum'], weight_decay=hyp['weight_decay'],
                           nesterov=True)
 
@@ -140,9 +153,11 @@ def train(cfg,
         del chkpt
 
     else:  # Initialize model with backbone (optional)
-        if '-tiny.cfg' in cfg:
+        if 'tiny' in cfg:
+            print('load yolo tiny pretrained weights')
             cutoff = load_darknet_weights(model, weights + 'yolov3-tiny.conv.15')
         else:
+            print('load yolo pretrained weights')
             cutoff = load_darknet_weights(model, weights + 'darknet53.conv.74')
 
         # Remove old results
@@ -173,6 +188,7 @@ def train(cfg,
         model, optimizer = amp.initialize(model, optimizer, opt_level='O1', verbosity=0)
 
     # Initialize distributed training
+    print('Initialize distributed training')
     if torch.cuda.device_count() > 1:
         dist.init_process_group(backend='nccl',  # 'distributed backend'
                                 init_method='tcp://127.0.0.1:9999',  # distributed training init method
@@ -182,6 +198,7 @@ def train(cfg,
         model.yolo_layers = model.module.yolo_layers  # move yolo layer indices to top level
 
     # Dataset
+    print('dataset')
     dataset = LoadImagesAndLabels(train_path,
                                   img_size,
                                   batch_size,
@@ -192,6 +209,7 @@ def train(cfg,
                                   cache_images=opt.cache_images)
 
     # Dataloader
+    print('initialize dataloader')
     dataloader = torch.utils.data.DataLoader(dataset,
                                              batch_size=batch_size,
                                              num_workers=8,#min(os.cpu_count(), batch_size),
@@ -200,6 +218,7 @@ def train(cfg,
                                              collate_fn=dataset.collate_fn)
 
     # Start training
+    print('start training')
     model.nc = nc  # attach number of classes to model
     model.hyp = hyp  # attach hyperparameters to model
     model.class_weights = labels_to_class_weights(dataset.labels, nc).to(device)  # attach class weights
@@ -323,7 +342,7 @@ def train(cfg,
             best_fitness = fitness
 
         # Save training results
-        save = (not opt.nosave) or ((not opt.evolve) and final_epoch)
+        save = final_epoch#(not opt.nosave) or ((not opt.evolve) and final_epoch)
         if save:
             with open('results.txt', 'r') as file:
                 # Create checkpoint
@@ -359,10 +378,10 @@ def train(cfg,
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--epochs', type=int, default=273, help='number of epochs')
+    parser.add_argument('--epochs', type=int, default=10, help='number of epochs')
     parser.add_argument('--batch-size', type=int, default=32, help='batch size')
     parser.add_argument('--accumulate', type=int, default=2, help='number of batches to accumulate before optimizing')
-    parser.add_argument('--cfg', type=str, default='cfg/yolov3-spp.cfg', help='cfg file path')
+    parser.add_argument('--cfg', type=str, default='cfg/yolov3-tiny-zsd.cfg', help='cfg file path')
     parser.add_argument('--data', type=str, default='data/my.data', help='coco.data file path')
     parser.add_argument('--multi-scale', action='store_true', help='train at (1/1.5)x - 1.5x sizes')
     parser.add_argument('--img-size', type=int, default=416, help='inference size (pixels)')
