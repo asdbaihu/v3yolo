@@ -42,7 +42,7 @@ hyp = {'giou': 1.582,  # giou loss gain
        'obj': 21.35,  # obj loss gain
        'obj_pw': 3.941,  # obj BCELoss positive_weight
        'iou_t': 0.2635,  # iou training threshold
-       'lr0': 0.0005, #0.002324,  # initial learning rate
+       'lr0': 0.0001, #0.002324,  # initial learning rate
        'lrf': -4.,  # final LambdaLR learning rate = lr0 * (10 ** lrf)
        'momentum': 0.97,  # SGD momentum
        'weight_decay': 0.0004569,  # optimizer weight decay
